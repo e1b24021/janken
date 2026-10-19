@@ -33,4 +33,5 @@ public class JankenController {
 
     return "janken";
   }
+
 }

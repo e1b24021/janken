@@ -16,7 +16,14 @@
     <a href="/jankengame?hand=Ch">ちょき</a>
     <a href="/jankengame?hand=Pa">ぱー</a>
   </p>
+    <p>
+      結果：
+      <span th:text="${janken.result}"></span>
+    </p>
 
+    <form th:action="@{/logout}" method="post">
+      <button type="submit">ログアウト</button>
+    </form>
   <div th:if="${janken != null}">
     <p th:text="'あなたの手 ' + ${janken.playerHand}"></p>
     <p th:text="'相手の手 ' + ${janken.cpuHand}"></p>
