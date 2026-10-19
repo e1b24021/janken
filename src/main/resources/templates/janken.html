@@ -45,6 +45,10 @@
       結果：
       <span th:text="${janken.result}"></span>
     </p>
+
+    <form th:action="@{/logout}" method="post">
+      <button type="submit">ログアウト</button>
+    </form>
   </div>
 
 </body>
