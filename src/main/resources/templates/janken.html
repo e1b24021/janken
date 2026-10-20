@@ -7,7 +7,15 @@
 </head>
 
 <body>
+
+
+  <h1>じゃんけん</h1>
+
+  <p th:if="${username != null}" th:text="'Hi ' + ${username}"> </p>
+  <h2>あなたの手を選んでください</h2>
+
   <h1>Janken GAME!</h1>
+
 
   <p th:if="${username != null}" th:text="'Hi ' + ${username}"></p>
 
@@ -21,6 +29,22 @@
       <span th:text="${janken.result}"></span>
     </p>
 
+
+    <p>
+      ログインユーザ：
+      <span th:text="${username}"></span>
+    </p>
+
+    <h2>エントリー</h2>
+    <ul>
+      <li th:each="user : ${users}" th:text="${user}"></li>
+    </ul>
+
+    <p>
+      <a th:href="@{/logout/confirm}">ログアウト</a>
+    </p>
+
+
     <form th:action="@{/logout}" method="post">
       <button type="submit">ログアウト</button>
     </form>
@@ -29,6 +53,7 @@
     <p th:text="'相手の手 ' + ${janken.cpuHand}"></p>
     <p th:text="'結果 ' + ${janken.result}"></p>
   </div>
+
 </body>
 
 </html>
