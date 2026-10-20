@@ -7,6 +7,9 @@
 </head>
 
 <body>
+
+  <h1>じゃんけん</h1>
+
   <p th:if="${username != null}" th:text="'Hi ' + ${username}"> </p>
   <h2>あなたの手を選んでください</h2>
 
@@ -46,6 +49,20 @@
       <span th:text="${janken.result}"></span>
     </p>
   </div>
+
+    <p>
+      ログインユーザ：
+      <span th:text="${username}"></span>
+    </p>
+
+    <h2>エントリー</h2>
+    <ul>
+      <li th:each="user : ${users}" th:text="${user}"></li>
+    </ul>
+
+    <p>
+      <a th:href="@{/logout/confirm}">ログアウト</a>
+    </p>
 
 </body>
 
