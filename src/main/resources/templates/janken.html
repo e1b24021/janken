@@ -8,8 +8,15 @@
 
 <body>
 
+  <h2>エントリー</h2>
+  <ul>
+    <li th:each="user : ${users}" th:text="${user}"></li>
+  </ul>
+
+
 
   <h1>じゃんけん</h1>
+
 
   <p th:if="${username != null}" th:text="'Hi ' + ${username}"> </p>
   <h2>あなたの手を選んでください</h2>
@@ -41,50 +48,26 @@
 
   <div th:if="${janken != null}">
     <h2>対戦結果</h2>
+    <p>
+      あなたの手：
+      <span th:text="${janken.playerHand}"></span>
+    </p>
 
-  <h1>Janken GAME!</h1>
+    <p>
+      相手の手：
+      <span th:text="${janken.cpuHand}"></span>
+    </p>
 
-
-
-  <p th:if="${username != null}" th:text="'Hi ' + ${username}"></p>
-
-  <p>
-    <a href="/jankengame?hand=Gu">ぐー</a>
-    <a href="/jankengame?hand=Ch">ちょき</a>
-    <a href="/jankengame?hand=Pa">ぱー</a>
-  </p>
     <p>
       結果：
       <span th:text="${janken.result}"></span>
     </p>
-
-
-    <p>
-      ログインユーザ：
-      <span th:text="${username}"></span>
-    </p>
-
-    <h2>エントリー</h2>
-    <ul>
-      <li th:each="user : ${users}" th:text="${user}"></li>
-    </ul>
-
-    <p>
-      <a th:href="@{/logout/confirm}">ログアウト</a>
-    </p>
-
-
-    <form th:action="@{/logout}" method="post">
-      <button type="submit">ログアウト</button>
-    </form>
-  <div th:if="${janken != null}">
-    <p th:text="'あなたの手 ' + ${janken.playerHand}"></p>
-    <p th:text="'相手の手 ' + ${janken.cpuHand}"></p>
-    <p th:text="'結果 ' + ${janken.result}"></p>
   </div>
+
 <form th:action="@{/logout}" method="post" onsubmit="return confirm('Are you sure you want to log out?');">
   <button type="submit">ログアウト</button>
 </form>
+
 </body>
 
 </html>

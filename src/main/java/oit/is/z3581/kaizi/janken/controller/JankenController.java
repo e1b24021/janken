@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.Authentication;
 
+
+import org.springframework.security.core.Authentication;
+
 import oit.is.z3581.kaizi.janken.model.
+
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class JankenController {
 
 
+
+
+
   @Autowired
   private Entry entry;
 
@@ -26,6 +33,9 @@ public class JankenController {
       @RequestParam(name = "hand", required = false) String hand,
       Model model,
       Authentication authentication) {
+
+
+
 
 
   @Autowired
@@ -40,6 +50,7 @@ public class JankenController {
       Model model) {
 
 
+
     String username = authentication.getName();
 
     entry.addUser(username);
@@ -48,8 +59,11 @@ public class JankenController {
     model.addAttribute("users", entry.getUsers());
 
 
+
+
     entry.addUser(username);
     model.addAttribute("users", entry.getUsers());
+
 
     if (hand != null) {
       if (!hand.equals("グー")
@@ -76,6 +90,8 @@ public class JankenController {
 
     entry.addUser(username);
 
+
+
   // じゃんけんの対戦処理
   @GetMapping("/jankengame")
   public String jankenGame(
@@ -84,7 +100,12 @@ public class JankenController {
 
 
 
+
     model.addAttribute("username", username);
+
+    model.addAttribute("users", entry.getUsers());
+
+
 
     model.addAttribute("users", entry.getUsers());
 
@@ -95,6 +116,7 @@ public class JankenController {
 
     Janken janken = new Janken(hand);
     model.addAttribute("janken", janken);
+
 
 
 

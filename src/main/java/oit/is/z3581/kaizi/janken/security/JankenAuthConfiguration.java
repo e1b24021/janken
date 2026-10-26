@@ -8,6 +8,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -19,10 +24,24 @@ public class JankenAuthConfiguration {
       throws Exception {
 
     http
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/h2-console/**").permitAll()
+            .requestMatchers("/janken", "/janken/**").authenticated()
+            .anyRequest().permitAll())
+        .csrf(csrf -> csrf
+            .ignoringRequestMatchers("/h2-console/**"))
+        .headers(headers -> headers
+            .frameOptions(frame -> frame.sameOrigin()))
+        .formLogin(login -> login
+            .defaultSuccessUrl("/janken", true)
+
+
+    http
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/janken", "/janken/**").authenticated()
             .anyRequest().permitAll())
         .formLogin(login -> login
+
             .permitAll())
         .logout(logout -> logout
             .logoutUrl("/logout")
@@ -33,15 +52,41 @@ public class JankenAuthConfiguration {
   }
 
   @Bean
+
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public InMemoryUserDetailsManager userDetailsService(
+      PasswordEncoder passwordEncoder) {
+
+    UserDetails user1 = User.withUsername("user1")
+        .password(passwordEncoder.encode("isdev"))
+
   public InMemoryUserDetailsManager userDetailsService() {
 
     UserDetails user1 = User.withUsername("user1")
 
         .password("{bcrypt}$2y$05$y8MYjPK5H0n8IRATNzUkae37SJjME6qDP1VMGrb12/55jVMTWf1nS")
+
         .roles("USER")
         .build();
 
     UserDetails user2 = User.withUsername("user2")
+
+        .password(passwordEncoder.encode("isdev"))
+        .roles("USER")
+        .build();
+
+    UserDetails honda = User.withUsername("ほんだ")
+        .password(passwordEncoder.encode("isdev"))
+        .roles("USER")
+        .build();
+
+    // 生成したユーザをImMemoryUserDetailsManagerに渡す（いくつでも良い）
+    return new InMemoryUserDetailsManager(user1, user2, honda);
+
         .password("{bcrypt}$2y$05$znK5vCR1EqYIIwW5i6blz.rYYU9BzqqlMODNTMCGAVsTgq5Emgyua")
         .roles("USER")
         .build();
@@ -57,6 +102,7 @@ public class JankenAuthConfiguration {
 
     // 生成したユーザをImMemoryUserDetailsManagerに渡す（いくつでも良い）
     return new InMemoryUserDetailsManager(user1, user2);
+
 
   }
 }
