@@ -8,19 +8,19 @@ public class Janken {
 
   public Janken(String playerHand) {
     this.playerHand = playerHand;
-    this.cpuHand = "グー";
+    this.cpuHand = "Gu";
     judge();
   }
 
   private void judge() {
-    if (playerHand.equals(cpuHand)) {
-      result = "あいこ";
-    } else if ((playerHand.equals("グー") && cpuHand.equals("チョキ")) ||
-        (playerHand.equals("チョキ") && cpuHand.equals("パー")) ||
-        (playerHand.equals("パー") && cpuHand.equals("グー"))) {
-      result = "勝ち";
+    if (playerHand.equals("Gu")) {
+      result = "Draw!";
+    } else if (playerHand.equals("Ch")) {
+      result = "You Lose!";
+    } else if (playerHand.equals("Pa")) {
+      result = "You Win!";
     } else {
-      result = "負け";
+      result = "Invalid hand";
     }
   }
 
