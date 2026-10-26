@@ -1,23 +1,34 @@
 package oit.is.z3581.kaizi.janken.controller;
 
+import oit.is.z3581.kaizi.janken.model.Entry;
 import oit.is.z3581.kaizi.janken.model.Janken;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Controller
 public class JankenController {
+
+  @Autowired
+  private Entry entry;
 
   @GetMapping("/janken")
   public String getJanken(
       @RequestParam(name = "hand", required = false) String hand,
-      @RequestParam(name = "username", required = false) String username,
-      Model model) {
+      Model model,
+      Authentication authentication) {
 
-    if (username != null && !username.isBlank()) {
-      model.addAttribute("username", username);
-    }
+    String username = authentication.getName();
+
+    entry.addUser(username);
+
+    model.addAttribute("username", username);
+    model.addAttribute("users", entry.getUsers());
 
     if (hand != null) {
       if (!hand.equals("グー")
@@ -35,10 +46,16 @@ public class JankenController {
 
   @PostMapping("/janken")
   public String postJanken(
-      @RequestParam("username") String username,
-      Model model) {
+      Model model,
+      Authentication authentication) {
+
+    String username = authentication.getName();
+
+    entry.addUser(username);
 
     model.addAttribute("username", username);
+    model.addAttribute("users", entry.getUsers());
+
     return "janken";
   }
 }
