@@ -36,6 +36,7 @@ public class JankenAuthConfiguration {
   public InMemoryUserDetailsManager userDetailsService() {
 
     UserDetails user1 = User.withUsername("user1")
+
         .password("{bcrypt}$2y$05$y8MYjPK5H0n8IRATNzUkae37SJjME6qDP1VMGrb12/55jVMTWf1nS")
         .roles("USER")
         .build();
@@ -49,5 +50,13 @@ public class JankenAuthConfiguration {
         .roles("USER")
         .build();
       return new InMemoryUserDetailsManager(user1, user2, honda);
+
+        .password("{bcrypt}$2y$05$FwFZJiI66mUibBQTWLfZyup1g9WAJIG2hRrxDoLb0PDLkXtTnIREe").roles("USER1").build();
+    UserDetails user2 = User.withUsername("user2")
+        .password("{bcrypt}$2y$05$iBeClv7bQufw4srhcO44/Oyjuq978RMq1BUk6oRJPSna7F0sBLBPO").roles("USER2").build();
+
+    // 生成したユーザをImMemoryUserDetailsManagerに渡す（いくつでも良い）
+    return new InMemoryUserDetailsManager(user1, user2);
+
   }
 }

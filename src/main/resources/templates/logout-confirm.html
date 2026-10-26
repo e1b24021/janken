@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ログアウト確認</title>
+</head>
+
+<body>
+  <h1>ログアウト確認</h1>
+  <p>Are you sure you want to log out?</p>
+
+  <form th:action="@{/logout}" method="post">
+    <button type="submit">ログアウトする</button>
+  </form>
+
+  <a th:href="@{/janken}">キャンセル</a>
+</body>
+
+</html>
