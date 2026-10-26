@@ -10,6 +10,8 @@
   <p th:if="${username != null}" th:text="'Hi ' + ${username}"> </p>
   <h2>あなたの手を選んでください</h2>
 
+  <h2>エントリー</h2>
+
   <ul>
     <li>
       <a th:href="@{/janken(hand='グー', username=${username})}">
@@ -27,6 +29,10 @@
       </a>
     </li>
   </ul>
+
+    <ul>
+      <li th:each="user : ${users}" th:text="${user}"></li>
+    </ul>
 
   <div th:if="${janken != null}">
     <h2>対戦結果</h2>
@@ -46,7 +52,9 @@
       <span th:text="${janken.result}"></span>
     </p>
   </div>
-
+<form th:action="@{/logout}" method="post" onsubmit="return confirm('Are you sure you want to log out?');">
+  <button type="submit">ログアウト</button>
+</form>
 </body>
 
 </html>
