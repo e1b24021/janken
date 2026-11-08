@@ -66,6 +66,22 @@ public class JankenController {
     return "janken";
   }
 
+  @GetMapping("/match")
+  public String match(@RequestParam Long id, Model model, Authentication auth) {
+
+    // ログインしているユーザの名前
+    String loginUser = auth.getName();
+
+    // クリックされたユーザを取得
+    User opponent = userMapper.selectById(id);
+
+    // HTMLに渡すデータ
+    model.addAttribute("loginUser", loginUser);
+    model.addAttribute("opponent", opponent);
+
+    return "match.html";
+  }
+
 
   @PostMapping("/janken")
   public String postJanken(
