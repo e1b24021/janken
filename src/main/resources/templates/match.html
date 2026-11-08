@@ -20,9 +20,9 @@
   <div th:if="${userHand == null}">
     <h3>あなたの手を選択してください</h3>
 
-    <a th:href="@{/fight(id=${opponent.id},hand='グー')}">グー</a>
-    <a th:href="@{/fight(id=${opponent.id},hand='チョキ')}">チョキ</a>
-    <a th:href="@{/fight(id=${opponent.id},hand='パー')}">パー</a>
+    <a th:href="@{/wait(id=${opponent.id},hand='グー')}">グー</a>
+    <a th:href="@{/wait(id=${opponent.id},hand='チョキ')}">チョキ</a>
+    <a th:href="@{/wait(id=${opponent.id},hand='パー')}">パー</a>
   </div>
 
   <!-- 試合結果 -->

@@ -19,6 +19,9 @@ import oit.is.z3581.kaizi.janken.model.User;
 import oit.is.z3581.kaizi.janken.model.MatchMapper;
 import oit.is.z3581.kaizi.janken.model.Match;
 
+import oit.is.z3581.kaizi.janken.model.MatchInfo;
+import oit.is.z3581.kaizi.janken.model.MatchInfoMapper;
+
 @Controller
 public class JankenController {
 
@@ -30,6 +33,9 @@ public class JankenController {
 
   @Autowired
   MatchMapper matchMapper;
+
+  @Autowired
+  MatchInfoMapper matchInfoMapper;
 
   @GetMapping("/janken")
   public String getJanken(
@@ -62,6 +68,12 @@ public class JankenController {
       Janken janken = new Janken(hand);
       model.addAttribute("janken", janken);
     }
+
+    // アクティブな試合情報を取得
+    ArrayList<MatchInfo> activeMatches = matchInfoMapper.selectActiveMatchInfo();
+
+    // HTMLに渡す
+    model.addAttribute("activeMatches", activeMatches);
 
     return "janken";
   }
@@ -128,6 +140,34 @@ public class JankenController {
     model.addAttribute("result", result);
 
     return "match.html";
+  }
+
+  @GetMapping("/wait")
+  public String wait(@RequestParam Long id,
+      @RequestParam String hand,
+      Model model,
+      Authentication auth) {
+
+    // ログインユーザを取得
+    User user = userMapper.selectByName(auth.getName());
+
+    // 対戦相手を取得
+    User opponent = userMapper.selectById(id);
+
+    // 試合情報を作成
+    MatchInfo matchInfo = new MatchInfo();
+    matchInfo.setUser1(user.getId());
+    matchInfo.setUser2(opponent.getId());
+    matchInfo.setUser1Hand(hand);
+    matchInfo.setIsActive(true);
+
+    // DBに登録
+    matchInfoMapper.insertMatchInfo(matchInfo);
+
+    // HTMLに渡すログインユーザ名
+    model.addAttribute("loginUser", user.getName());
+
+    return "wait.html";
   }
 
   @PostMapping("/janken")
