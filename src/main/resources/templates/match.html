@@ -16,6 +16,34 @@
     <span th:text="${opponent.name}"></span>
   </h2>
 
+  <!-- じゃんけんの手を選択するリンク -->
+  <div th:if="${userHand == null}">
+    <h3>あなたの手を選択してください</h3>
+
+    <a th:href="@{/fight(id=${opponent.id},hand='グー')}">グー</a>
+    <a th:href="@{/fight(id=${opponent.id},hand='チョキ')}">チョキ</a>
+    <a th:href="@{/fight(id=${opponent.id},hand='パー')}">パー</a>
+  </div>
+
+  <!-- 試合結果 -->
+  <div th:if="${userHand != null}">
+    <h3>試合結果</h3>
+
+    <p>
+      <span th:text="${loginUser}"></span>の手：
+      <span th:text="${userHand}"></span>
+    </p>
+
+    <p>
+      <span th:text="${opponent.name}"></span>の手：
+      <span th:text="${cpuHand}"></span>
+    </p>
+
+    <h3 th:text="${result}"></h3>
+  </div>
+
+  <a href="/janken">もどる</a>
+
 </body>
 
 </html>
