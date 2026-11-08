@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
+//import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 
 //import oit.is.z3581.kaizi.janken.model.Match;
 
@@ -15,7 +16,14 @@ public interface MatchMapper {
   @Select("SELECT * FROM matches")
   ArrayList<Match> selectAllMatches();
 
-  @Insert("INSERT INTO matches (user1, user2, user1Hand, user2Hand, isActive) VALUES (#{user1}, #{user2}, #{user1Hand}, #{user2Hand}, FALSE)")
-  @Options(useGeneratedKeys = true, keyProperty = "id")
-  void insertMatch(Match match);
+  @Insert("""
+      INSERT INTO matches
+      (user1, user2, user1Hand, user2Hand, isActive)
+      VALUES
+      (#{user1}, #{user2}, #{user1Hand}, #{user2Hand}, TRUE)
+      """)
+  void insertMatch(@Param("user1") Long user1,
+      @Param("user2") Long user2,
+      @Param("user1Hand") String user1Hand,
+      @Param("user2Hand") String user2Hand);
 }

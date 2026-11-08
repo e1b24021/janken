@@ -22,6 +22,9 @@ import oit.is.z3581.kaizi.janken.model.Match;
 import oit.is.z3581.kaizi.janken.model.MatchInfo;
 import oit.is.z3581.kaizi.janken.model.MatchInfoMapper;
 
+import org.springframework.transaction.annotation.Transactional;
+//import oit.is.z3581.kaizi.janken.model.MatchInfo;
+
 @Controller
 public class JankenController {
 
@@ -129,8 +132,7 @@ public class JankenController {
     match.setUser1Hand(hand);
     match.setUser2Hand(cpuHand);
 
-    // DBに登録
-    matchMapper.insertMatch(match);
+
 
     // HTMLに表示する情報を渡す
     model.addAttribute("loginUser", user.getName());
@@ -143,6 +145,7 @@ public class JankenController {
   }
 
   @GetMapping("/wait")
+  @Transactional
   public String wait(@RequestParam Long id,
       @RequestParam String hand,
       Model model,
@@ -154,17 +157,39 @@ public class JankenController {
     // 対戦相手を取得
     User opponent = userMapper.selectById(id);
 
-    // 試合情報を作成
-    MatchInfo matchInfo = new MatchInfo();
-    matchInfo.setUser1(user.getId());
-    matchInfo.setUser2(opponent.getId());
-    matchInfo.setUser1Hand(hand);
-    matchInfo.setIsActive(true);
 
-    // DBに登録
-    matchInfoMapper.insertMatchInfo(matchInfo);
+    // 対戦相手が自分を待っているか確認
+    MatchInfo waitingMatch = matchInfoMapper.selectWaitingMatch(user.getId(), opponent.getId());
 
-    // HTMLに渡すログインユーザ名
+
+    if (waitingMatch == null) {
+      // 待機中の試合がなければ、自分が先手として登録
+      MatchInfo matchInfo = new MatchInfo();
+
+      matchInfo.setUser1(user.getId());
+      matchInfo.setUser2(opponent.getId());
+      matchInfo.setUser1Hand(hand);
+      matchInfo.setIsActive(true);
+
+      matchInfoMapper.insertMatchInfo(matchInfo);
+
+    } else {
+
+      // 待機中の試合があれば、試合を成立させる
+
+      // 先手と後手の情報をmatchesに登録
+      matchMapper.insertMatch(
+          waitingMatch.getUser1(),
+          waitingMatch.getUser2(),
+          waitingMatch.getUser1Hand(),
+          hand);
+
+
+      // 先手の待機状態を解除
+      matchInfoMapper.updateIsActiveFalse(waitingMatch.getId());
+    }
+
+    // wait.htmlに表示するログインユーザ名
     model.addAttribute("loginUser", user.getName());
 
     return "wait.html";

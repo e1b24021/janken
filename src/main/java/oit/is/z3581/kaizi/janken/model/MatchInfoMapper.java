@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Param;
 
 //import oit.is.z3581.kaizi.janken.model.MatchInfo;
 
@@ -36,4 +38,24 @@ public interface MatchInfoMapper {
       WHERE m.isActive = TRUE
       """)
   ArrayList<MatchInfo> selectActiveMatchInfo();
+
+  // 対戦相手が自分を待っているレコードを取得
+  @Select("""
+      SELECT *
+      FROM matchinfo
+      WHERE user1 = #{opponentId}
+        AND user2 = #{userId}
+        AND isActive = TRUE
+      """)
+  MatchInfo selectWaitingMatch(
+      @Param("userId") Long userId,
+      @Param("opponentId") Long opponentId);
+
+  // 待機状態を解除
+  @Update("""
+      UPDATE matchinfo
+      SET isActive = FALSE
+      WHERE id = #{id}
+      """)
+  void updateIsActiveFalse(@Param("id") Long id);
 }
