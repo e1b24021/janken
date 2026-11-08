@@ -52,6 +52,28 @@
     </p>
   </div>
 
+  <table border="1">
+    <thead>
+      <tr>
+        <th>試合ID</th>
+        <th>ユーザー1</th>
+        <th>ユーザー2</th>
+        <th>ユーザー1の手</th>
+        <th>ユーザー2の手</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr th:each="match : ${matches}">
+        <td th:text="${match.id}"></td>
+        <td th:text="${match.user1}"></td>
+        <td th:text="${match.user2}"></td>
+        <td th:text="${match.user1Hand}"></td>
+        <td th:text="${match.user2Hand}"></td>
+      </tr>
+    </tbody>
+  </table>
+
   <form th:action="@{/logout}" method="post" onsubmit="return confirm('Are you sure you want to log out?');">
     <button type="submit">ログアウト</button>
   </form>

@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import oit.is.z3581.kaizi.janken.model.UserMapper;
 import oit.is.z3581.kaizi.janken.model.User;
 
+import oit.is.z3581.kaizi.janken.model.MatchMapper;
+import oit.is.z3581.kaizi.janken.model.Match;
+
 @Controller
 public class JankenController {
 
@@ -24,6 +27,9 @@ public class JankenController {
 
   @Autowired
   UserMapper userMapper;
+
+  @Autowired
+  MatchMapper matchMapper;
 
   @GetMapping("/janken")
   public String getJanken(
@@ -42,6 +48,9 @@ public class JankenController {
     model.addAttribute("users", entry.getUsers());
     // HTMLにユーザ一覧を渡す
     model.addAttribute("users", users);
+
+    ArrayList<Match> matches = matchMapper.selectAllMatches();
+    model.addAttribute("matches", matches);
 
     if (hand != null) {
       if (!hand.equals("グー")
