@@ -25,6 +25,9 @@ import oit.is.z3581.kaizi.janken.model.MatchInfoMapper;
 import org.springframework.transaction.annotation.Transactional;
 //import oit.is.z3581.kaizi.janken.model.MatchInfo;
 
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import oit.is.z3581.kaizi.janken.service.AsyncKekka;
+
 @Controller
 public class JankenController {
 
@@ -39,6 +42,9 @@ public class JankenController {
 
   @Autowired
   MatchInfoMapper matchInfoMapper;
+
+  @Autowired
+  AsyncKekka asyncKekka;
 
   @GetMapping("/janken")
   public String getJanken(
@@ -157,10 +163,8 @@ public class JankenController {
     // 対戦相手を取得
     User opponent = userMapper.selectById(id);
 
-
     // 対戦相手が自分を待っているか確認
     MatchInfo waitingMatch = matchInfoMapper.selectWaitingMatch(user.getId(), opponent.getId());
-
 
     if (waitingMatch == null) {
       // 待機中の試合がなければ、自分が先手として登録
@@ -184,7 +188,6 @@ public class JankenController {
           waitingMatch.getUser1Hand(),
           hand);
 
-
       // 先手の待機状態を解除
       matchInfoMapper.updateIsActiveFalse(waitingMatch.getId());
     }
@@ -193,6 +196,21 @@ public class JankenController {
     model.addAttribute("loginUser", user.getName());
 
     return "wait.html";
+  }
+
+  @GetMapping("/kekka")
+  public SseEmitter kekka(Authentication auth) {
+
+    // ログインユーザーを取得
+    User user = userMapper.selectByName(auth.getName());
+
+    // SSEの接続を作成
+    SseEmitter emitter = new SseEmitter(0L);
+
+    // 非同期で試合結果を確認
+    asyncKekka.checkMatch(emitter, user.getId());
+
+    return emitter;
   }
 
   @PostMapping("/janken")
