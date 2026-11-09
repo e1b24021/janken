@@ -14,6 +14,38 @@
     Hi <span th:text="${loginUser}"></span>
   </h2>
 
+  <div id="result"></div>
+
+  <script>
+    // SSEでサーバーに接続
+    const eventSource = new EventSource('/kekka');
+
+    // 試合結果を受信したときの処理
+    eventSource.onmessage = function (event) {
+
+      // 対戦結果を表示
+      const resultArea = document.getElementById('result');
+
+      const heading = document.createElement('h2');
+      heading.textContent = '対戦結果';
+
+      const resultText = document.createElement('p');
+      resultText.textContent = event.data;
+
+      // janken画面に戻るリンク
+      const link = document.createElement('a');
+      link.href = '/janken';
+      link.textContent = '戻る';
+
+      resultArea.appendChild(heading);
+      resultArea.appendChild(resultText);
+      resultArea.appendChild(link);
+
+      // SSE接続を終了
+      eventSource.close();
+    };
+  </script>
+
 </body>
 
 </html>
